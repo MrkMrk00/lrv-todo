@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tanstack/react-query':
-    specifier: ^5.50.1
-    version: 5.50.1(react@18.3.1)
   clsx:
     specifier: ^2.1.1
     version: 2.1.1
@@ -871,19 +868,6 @@ packages:
     dependencies:
       tslib: 2.6.3
     dev: true
-
-  /@tanstack/query-core@5.50.1:
-    resolution: {integrity: sha512-lpfhKPrJlyV2DSVcQb/HuozH3Av3kws4ge22agx+lNGpFkS4vLZ7St0l3GLwlAD+bqB+qXGex3JdRKUNtMviEQ==}
-    dev: false
-
-  /@tanstack/react-query@5.50.1(react@18.3.1):
-    resolution: {integrity: sha512-s0DW3rVBDPReDDovUjVqItVa3R2nPfUANK9nqGvarO2DwTiY9U4EBTsqizMxItRCoGgK5apeM7D3mxlHrSKpdQ==}
-    peerDependencies:
-      react: ^18.0.0
-    dependencies:
-      '@tanstack/query-core': 5.50.1
-      react: 18.3.1
-    dev: false
 
   /@tanstack/react-virtual@3.5.0(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-rtvo7KwuIvqK9zb0VZ5IL7fiJAEnG+0EiFZz8FUOs+2mhGqdGmjKIaT1XU7Zq0eFqL0jonLlhbayJI/J2SA/Bw==}

@@ -27,7 +27,6 @@
     },
     "packageManager": "pnpm@8.10.5+sha256.a4bd9bb7b48214bbfcd95f264bd75bb70d100e5d4b58808f5cd6ab40c6ac21c5",
     "dependencies": {
-        "@tanstack/react-query": "^5.50.1",
         "clsx": "^2.1.1",
         "sonner": "^1.5.0",
         "tailwind-merge": "^2.3.0"

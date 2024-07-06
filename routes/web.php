@@ -13,5 +13,7 @@ Route::post('/register', [AuthController::class, 'attemptRegister'])->name('regi
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::resource('', TodoController::class)->except(['create', 'edit']);
+    Route::get('/', [TodoController::class, 'index'])->name('todos.index');
+    Route::resource('todos', TodoController::class)
+        ->only(['store', 'update', 'destroy']);
 });

@@ -2,17 +2,21 @@ import { Button } from '@/components/Button';
 import type { User } from '@/types';
 import { doFetch } from '@/utils';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function useLogout() {
-    const { mutate, data, error } = useMutation({
-        mutationFn: () => doFetch.post<1>('logout'),
-        mutationKey: ['logout'],
-        networkMode: 'always',
-    });
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState<Error | null>(null);
 
-    return { logout: mutate, isLoggedOut: !!data, error };
+    return {
+        logout: () => {
+            doFetch.post('logout')
+                .then(() => setSuccess(true))
+                .catch((err) => { setSuccess(false); setError(err) });
+        },
+        isLoggedOut: success,
+        error,
+    };
 }
 
 function LogoutSuccessDialog(props: { isOpen: boolean }) {

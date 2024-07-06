@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable()->default(null);
             $table->boolean('completed')->default(false);
             $table->dateTime('deadline')->nullable();
-            $table->foreignIdFor(User::class);
+            $table->foreignIdFor(User::class)->nullable(false);
             $table->timestamps();
         });
     }
