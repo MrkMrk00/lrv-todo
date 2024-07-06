@@ -19,6 +19,7 @@ export function Button<T extends ElementType = 'button'>({
         <TargetComponent
             className={cn(
                 'rounded-md shadow-sm p-2 hover:brightness-95 transition-all',
+                restProps.disabled && 'pointer-events-none brightness-75',
                 className,
             )}
             {...restProps}

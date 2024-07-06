@@ -2,7 +2,6 @@ import { Button } from '@/components/Button';
 import type { User } from '@/types';
 import { doFetch } from '@/utils';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
-import { router } from '@inertiajs/react';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
@@ -20,7 +19,7 @@ function LogoutSuccessDialog(props: { isOpen: boolean }) {
     const { isOpen } = props;
 
     function onLogoutModalClose() {
-        router.visit(route('login'));
+        window.location.replace(route('login'));
     }
 
     return (
@@ -31,10 +30,10 @@ function LogoutSuccessDialog(props: { isOpen: boolean }) {
             onClose={onLogoutModalClose}
         >
             <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
-                <div className="flex min-h-full items-center justify-center p-4">
+                <div className="flex min-h-full items-center justify-center p-4 backdrop-blur-2xl">
                     <DialogPanel
                         transition
-                        className="w-full max-w-md rounded-xl bg-slate-400 shadow-sm p-6 backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
+                        className="w-full max-w-md rounded-xl bg-slate-400 shadow-sm p-6  duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
                     >
                         <DialogTitle as="h3" className="font-medium">
                             Odhlášení dopadlo úspěšně

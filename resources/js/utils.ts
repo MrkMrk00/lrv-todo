@@ -21,6 +21,7 @@ export function doFetch<TResponse>(
     init: RequestInit = {},
 ): Promise<TResponse> {
     init.headers = {
+        'X-Requested-With': 'XMLHttpRequest',
         'X-XSRF-TOKEN': getCookie('XSRF-TOKEN') as string,
         'Content-Type': 'application/json',
         Accept: 'application/json',
