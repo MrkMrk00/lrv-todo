@@ -32,3 +32,7 @@ export function InputHint(props: ComponentPropsWithRef<'small'>) {
 
     return <small className={cn('text-gray-600', className)} {...restProps} />;
 }
+
+export function RequiredStar() {
+    return <small className="inline-flex justify-start text-red-600">*</small>
+}

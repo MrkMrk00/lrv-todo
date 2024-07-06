@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * 
+ *
  *
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Todo newModelQuery()
@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string|null $description
  * @property int $completed
  * @property string|null $deadline
- * @property int $id_user
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Todo whereCompleted($value)
@@ -26,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static \Illuminate\Database\Eloquent\Builder|Todo whereDeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Todo whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Todo whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Todo whereIdUser($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Todo whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Todo whereUpdatedAt($value)
  * @property int $user_id
@@ -36,4 +34,18 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Todo extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'completed',
+        'title',
+        'description',
+        'deadline',
+    ];
+
+    public function casts(): array
+    {
+        return [
+            'deadline' => 'datetime',
+        ];
+    }
 }

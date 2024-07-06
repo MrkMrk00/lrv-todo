@@ -23,17 +23,18 @@ class TodoController extends Controller
         ]);
     }
 
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'completed' => 'required|boolean',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'deadline' => 'nullable|datetime',
+        ]);
+
+        $this->user()->todos()->create($data);
+
+        return to_route('index');
     }
 
     /**
