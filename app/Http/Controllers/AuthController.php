@@ -25,7 +25,7 @@ class AuthController extends Controller
     {
         $request->authenticate();
 
-        return to_route('home');
+        return to_route('index');
     }
 
     public function attemptRegister(RegisterRequest $request): RedirectResponse
@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return to_route('home');
+        return to_route('index');
     }
 
     public function logout(): RedirectResponse
