@@ -1,0 +1,14 @@
+arrowParens: avoid
+bracketSameLine: false
+bracketSpacing: true
+endOfLine: lf
+jsxSingleQuote: false
+semi: true
+useTabs: false
+tabWidth: 4
+singleQuote: true
+printWidth: 80
+
+plugins:
+  - prettier-plugin-tailwindcss
+  - prettier-plugin-organize-imports
