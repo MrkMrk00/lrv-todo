@@ -11,7 +11,7 @@ use Inertia\Response;
 
 class TodoController extends Controller
 {
-    private const TODOS_PER_PAGE = 5;
+    private const TODOS_PER_PAGE = 10;
     private const DATETIME_FORMAT = 'Y-m-d\TH:i';
 
     public function index(Request $request): Response
