@@ -4,11 +4,11 @@ import type { Todo } from '@/types';
 import { cn, useDebounced } from '@/utils';
 import { router, useForm } from '@inertiajs/react';
 import {
-    type ComponentPropsWithRef,
+    type ComponentPropsWithoutRef,
     type FormEvent,
     type ReactNode,
     useEffect,
-    useState,
+    useState
 } from 'react';
 import { toast } from 'sonner';
 
@@ -80,7 +80,7 @@ function ActionButton({
     className,
     children,
     ...restProps
-}: ComponentPropsWithRef<typeof Button>) {
+}: ComponentPropsWithoutRef<typeof Button>) {
     return (
         <Button
             type="button"

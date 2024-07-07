@@ -1,6 +1,6 @@
 import { cn } from '@/utils';
 import { Switch } from '@headlessui/react';
-import { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef } from 'react';
 
 export function Toggle({
     className,

@@ -1,6 +1,6 @@
 import { cn } from '@/utils';
 import {
-    ComponentProps,
+    type ComponentProps,
     type ComponentPropsWithoutRef,
     forwardRef,
 } from 'react';
