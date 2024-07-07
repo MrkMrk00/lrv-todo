@@ -9,6 +9,6 @@ composer install
 pnpm i
 php artisan migrate
 
-pnpm dev
+pnpm build 
 php artisan serve
 ```
