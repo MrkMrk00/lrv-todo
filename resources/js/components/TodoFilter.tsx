@@ -2,32 +2,25 @@ import { Button } from '@/components/Button';
 import { Input } from '@/components/Form';
 import { CollapseChevron } from '@/components/Icons';
 import { Toggle } from '@/components/Toggle';
+import { toIsoDatetime } from '@/utils';
 import { router } from '@inertiajs/react';
-import { type MouseEvent, type RefObject, useMemo, useRef, useState } from 'react';
+import {
+    type Dispatch,
+    type MouseEvent,
+    type SetStateAction,
+    useEffect,
+    useState,
+} from 'react';
 
 function Clear({
-    inputRef,
     onClick,
 }: {
-    inputRef: RefObject<HTMLInputElement>;
     onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }) {
     return (
         <Button
             type="button"
-            onClick={(ev: MouseEvent<HTMLButtonElement>) => {
-                const element = inputRef?.current;
-                if (!element) {
-                    console.error('Element to clear not found.');
-                    return;
-                }
-
-                element.value = '';
-
-                if (onClick) {
-                    onClick(ev);
-                }
-            }}
+            onClick={onClick}
             className="text-white bg-red-500"
         >
             <svg
@@ -48,48 +41,66 @@ function Clear({
     );
 }
 
+type Filter = {
+    only_uncompleted: 1 | null;
+    from: Date | null;
+    to: Date | null;
+};
+
 export function TodoFilter() {
+    const [hasChanged, setHasChanged] = useState(false);
+    const [filter, setFilterValue] = useState<Filter>(() => {
+        const search = new URLSearchParams(window.location.search);
+
+        return {
+            only_uncompleted: search.has('only_uncompleted') ? 1 : null,
+            from: search.has('from') ? new Date(search.get('from')!) : null,
+            to: search.has('to') ? new Date(search.get('to')!) : null,
+        };
+    });
+
+    const setFilter: Dispatch<SetStateAction<typeof filter>> = param => {
+        setFilterValue(param);
+        setHasChanged(true);
+    };
+
     const [showFilter, setShowFilter] = useState(true);
 
-    const formRef = useRef<HTMLFormElement>(null);
-    const fromRef = useRef<HTMLInputElement>(null);
-    const toRef = useRef<HTMLInputElement>(null);
-
-    const timeout = useRef<number | null>(null);
-
-    const defaultValue = useMemo(() => {
-        return new URLSearchParams(window.location.search);
-    }, []);
-
-    function handleFilter() {
-        if (timeout.current) {
-            clearTimeout(timeout.current);
+    useEffect(() => {
+        if (!hasChanged) {
+            return;
         }
 
-        timeout.current = window.setTimeout(() => {
-            if (!formRef.current) {
-                console.error('Form element not found.');
-                return;
+        handleFilter();
+    }, [hasChanged, filter]);
+
+    function handleFilter() {
+        const search = new URLSearchParams(window.location.search);
+        for (const [key, value] of Object.entries(filter)) {
+            if (value === null) {
+                search.delete(key);
+                continue;
             }
 
-            const formData = new FormData(formRef.current);
-            const query = Object.fromEntries(
-                Array.from(formData.entries()).filter(([, value]) => !!value),
-            );
-            console.log(query);
+            if (value instanceof Date) {
+                search.set(key, toIsoDatetime(value));
 
-            router.visit(route('todos.index', query), {
-                preserveState: true,
-            });
-        }, 200);
+                continue;
+            }
+
+            search.set(key, value.toString());
+        }
+
+        // Při změně filtru se může změnit i počet stránek - reset query parametru page
+        search.delete('page');
+
+        router.visit(route('todos.index', Object.fromEntries(search)), {
+            preserveState: true,
+        });
     }
 
     return (
-        <form
-            onChange={handleFilter}
-            ref={formRef}
-            className="flex flex-col gap-2"
-        >
+        <form className="flex flex-col gap-2">
             <button
                 onClick={() => setShowFilter(prev => !prev)}
                 type="button"
@@ -103,34 +114,83 @@ export function TodoFilter() {
                 <>
                     <div className="flex justify-between gap-4 px-2 py-4">
                         <label className="inline-flex gap-4 items-center">
-                            <small>Pouze nesplněné</small>
+                            <small>
+                                Pouze
+                                <br />
+                                nesplněné
+                            </small>
                             <Toggle
-                                defaultChecked={defaultValue.has('only_uncompleted')}
-                                onChange={handleFilter}
+                                onChange={checked => {
+                                    setFilter(prev => ({
+                                        ...prev,
+                                        only_uncompleted: checked ? 1 : null,
+                                    }));
+                                }}
+                                checked={filter.only_uncompleted === 1}
                                 name="only_uncompleted"
                             />
                         </label>
 
                         <label className="inline-flex gap-4 items-center">
-                            <small>Od</small>
+                            <small>
+                                Deadline
+                                <br />
+                                od
+                            </small>
                             <Input
-                                defaultValue={defaultValue.get('from') ?? ''}
-                                ref={fromRef}
+                                value={
+                                    filter.from
+                                        ? toIsoDatetime(filter.from)
+                                        : ''
+                                }
+                                onChange={ev => {
+                                    if (!ev.currentTarget) {
+                                        return;
+                                    }
+
+                                    setFilter(prev => ({
+                                        ...prev,
+                                        from: ev.currentTarget?.valueAsDate,
+                                    }));
+                                }}
                                 type="datetime-local"
                                 name="from"
                             />
-                            <Clear inputRef={fromRef} onClick={handleFilter} />
+                            <Clear
+                                onClick={() =>
+                                    setFilter(prev => ({ ...prev, from: null }))
+                                }
+                            />
                         </label>
 
                         <label className="inline-flex gap-4 items-center">
-                            <small>Do</small>
+                            <small>
+                                Deadline
+                                <br />
+                                do
+                            </small>
                             <Input
-                                defaultValue={defaultValue.get('to') ?? ''}
-                                ref={toRef}
+                                value={
+                                    filter.to ? toIsoDatetime(filter.to) : ''
+                                }
+                                onChange={ev => {
+                                    if (!ev.currentTarget) {
+                                        return;
+                                    }
+
+                                    setFilter(prev => ({
+                                        ...prev,
+                                        to: ev.currentTarget?.valueAsDate,
+                                    }));
+                                }}
                                 type="datetime-local"
                                 name="to"
                             />
-                            <Clear inputRef={toRef} onClick={handleFilter} />
+                            <Clear
+                                onClick={() =>
+                                    setFilter(prev => ({ ...prev, to: null }))
+                                }
+                            />
                         </label>
                     </div>
                     <hr />

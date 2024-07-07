@@ -11,7 +11,7 @@ use Inertia\Response;
 
 class TodoController extends Controller
 {
-    private const TODOS_PER_PAGE = 2;
+    private const TODOS_PER_PAGE = 5;
     private const DATETIME_FORMAT = 'Y-m-d\TH:i';
 
     public function index(Request $request): Response
@@ -21,8 +21,8 @@ class TodoController extends Controller
             ->orderBy('deadline')
             ->orderBy('created_at');
 
-        if ($request->query('only_uncompleted') === 'on') {
-            $query->where('completed', '=', 1);
+        if ($request->query->has('only_uncompleted')) {
+            $query->where('completed', '=', 0);
         }
 
         if ($from = $request->query('from')) {

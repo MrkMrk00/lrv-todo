@@ -1,11 +1,11 @@
 import { AppLayout } from '@/components/AppLayout';
 import { RequiredStar } from '@/components/Form';
 import { CollapseChevron } from '@/components/Icons';
+import { Pager } from '@/components/Pager';
 import { TodoFilter } from '@/components/TodoFilter';
 import { AddTodoRow, TodoRow } from '@/components/TodoList';
 import type { PageProps, Todo } from '@/types';
 import { useState } from 'react';
-import { Pager } from '@/components/Pager';
 
 type HomeProps = PageProps<{
     todos: Todo[];
@@ -14,13 +14,12 @@ type HomeProps = PageProps<{
 }>;
 
 export default function Home(props: HomeProps) {
-    console.log(props);
     const { todos, page, hasMorePages } = props;
     const [showAddTodo, setShowAddTodo] = useState(!todos?.length);
 
     return (
         <AppLayout {...props}>
-            <main className="flex flex-col justify-center max-w-4xl mx-auto w-full pt-4 gap-2">
+            <main className="flex flex-col justify-center max-w-4xl mx-auto w-full gap-2">
                 <div
                     onClick={() => setShowAddTodo(prev => !prev)}
                     className="flex flex-row justify-between p-2 bg-gray-50 border-y-2 cursor-pointer"
@@ -45,7 +44,7 @@ export default function Home(props: HomeProps) {
                         </div>
 
                         <AddTodoRow />
-                        <hr className="border-b" />
+                        <hr />
                     </>
                 )}
 

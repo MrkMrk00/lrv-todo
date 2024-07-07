@@ -8,12 +8,11 @@ type LayoutProps = PropsWithChildren<PageProps>;
 export function AppLayout({ children, auth: { user } }: LayoutProps) {
     return (
         <>
-            <div className="w-full h-full max-w-4xl flex flex-col mx-auto pt-8">
+            <div className="w-full h-full max-w-4xl flex flex-col mx-auto">
                 <Navbar user={user} />
                 {children}
+                <Toaster />
             </div>
-
-            <Toaster />
         </>
     );
 }

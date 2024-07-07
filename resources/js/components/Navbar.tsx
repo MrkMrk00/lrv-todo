@@ -79,8 +79,8 @@ export function Navbar({ user }: { user: User | null }) {
 
     return (
         <>
-            <nav className="flex flex-row w-full justify-between items-center">
-                <h1 className="px-4 py-2 text-4xl font-semibold">TODOs</h1>
+            <nav className="flex flex-row w-full justify-between items-center py-8">
+                <h1 className="px-2 text-4xl font-semibold">TODOs</h1>
                 <hr className="w-full border-b border-slate-300" />
 
                 {!!user && (
@@ -89,7 +89,7 @@ export function Navbar({ user }: { user: User | null }) {
                             ev.preventDefault();
                             logout();
                         }}
-                        className="px-4 py-2"
+                        className="px-4"
                     >
                         <Button
                             type="submit"

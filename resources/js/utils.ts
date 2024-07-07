@@ -55,3 +55,7 @@ export function useDebounced<T>(value: T, timeout: number = 300): T {
 
     return state;
 }
+
+export function toIsoDatetime(date: Date) {
+    return date.toISOString().slice(0, 16);
+}
