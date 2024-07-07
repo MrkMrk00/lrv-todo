@@ -51,9 +51,7 @@ export default function Home(props: HomeProps) {
                 <TodoFilter />
 
                 {!todos.length && (
-                    <strong className="text-2xl mx-auto pt-4">
-                        Nic :/
-                    </strong>
+                    <strong className="text-2xl mx-auto pt-4">Nic :/</strong>
                 )}
 
                 {todos.map(todo => (

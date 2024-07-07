@@ -26,17 +26,17 @@ class TodoController extends Controller
         }
 
         if ($from = $request->query('from')) {
-            $dateTimeFrom = \DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $from);
-
-            $query->where('deadline', '>=', $dateTimeFrom)
-                ->whereNotNull('deadline');
+            if ($dateTimeFrom = \DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $from)) {
+                $query->where('deadline', '>=', $dateTimeFrom)
+                    ->whereNotNull('deadline');
+            }
         }
 
         if ($to = $request->query('to')) {
-            $dateTimeTo = \DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $to);
-
-            $query->where('deadline', '<=', $dateTimeTo)
-                ->whereNotNull('deadline');
+            if ($dateTimeTo = \DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $to)) {
+                $query->where('deadline', '<=', $dateTimeTo)
+                    ->whereNotNull('deadline');
+            }
         }
 
         $todosPager = $query->simplePaginate(self::TODOS_PER_PAGE);
