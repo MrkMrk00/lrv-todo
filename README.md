@@ -3,8 +3,11 @@
 Inertia.js + React
 
 ```{bash}
-pnpm i
+cp .env.production .env
+
 composer install
+pnpm i
+php artisan migrate
 
 pnpm dev
 php artisan serve
