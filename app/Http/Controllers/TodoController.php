@@ -3,25 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Todo;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TodoController extends Controller
 {
+    private const TODOS_PER_PAGE = 20;
+
     public function index(): Response
     {
         $todosPager = $this->user()
             ->todos()
-            ->simplePaginate(20);
+            ->cursorPaginate(self::TODOS_PER_PAGE);
 
         return Inertia::render('Home', [
             'todos' => $todosPager->items(),
-            'hasMorePages' => $todosPager->hasMorePages(),
+            'previous' => $todosPager->previousPageUrl(),
+            'next' => $todosPager->nextPageUrl(),
         ]);
     }
 
@@ -29,34 +30,30 @@ class TodoController extends Controller
     {
         Gate::authorize('create', Todo::class);
 
-        $data = $request->validate([
-            'completed' => 'required|boolean',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'deadline' => 'nullable|datetime',
-        ]);
-
-        $this->user()->todos()->create($data);
+        $data = Todo::validate($request->all());
+        $this->user()
+            ->todos()
+            ->create($data);
 
         return to_route('todos.index');
     }
 
-    public function update(Request $request, Todo $todo)
+    public function update(Request $request, Todo $todo): RedirectResponse
     {
         Gate::authorize('update', $todo);
+
+        $data = Todo::validate($request->all());
+        $todo->update($data);
+
+        return to_route('todos.index');
     }
 
-    public function destroy(Todo $todo)
+    public function destroy(Todo $todo): RedirectResponse
     {
         Gate::authorize('delete', $todo);
 
         $todo->delete();
 
         return to_route('todos.index');
-    }
-
-    private function user(): User
-    {
-        return Auth::user();
     }
 }

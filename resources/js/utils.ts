@@ -1,4 +1,5 @@
 import clsx, { type ClassValue } from 'clsx';
+import { useEffect, useState } from 'react';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...classes: ClassValue[]) {
@@ -42,3 +43,15 @@ doFetch.put = <TResponse>(endpoint: string, init: RequestInit = {}) =>
     doFetch<TResponse>(endpoint, { ...init, method: 'PUT' });
 doFetch.delete = <TResponse>(endpoint: string, init: RequestInit = {}) =>
     doFetch<TResponse>(endpoint, { ...init, method: 'DELETE' });
+
+export function useDebounced<T>(value: T, timeout: number = 300): T {
+    const [state, setState] = useState(value);
+
+    useEffect(() => {
+        const handle = setTimeout(() => setState(value), timeout);
+
+        return () => clearTimeout(handle);
+    }, [value, timeout]);
+
+    return state;
+}

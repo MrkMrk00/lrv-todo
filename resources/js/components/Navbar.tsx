@@ -10,9 +10,13 @@ function useLogout() {
 
     return {
         logout: () => {
-            doFetch.post('logout')
+            doFetch
+                .post('logout')
                 .then(() => setSuccess(true))
-                .catch((err) => { setSuccess(false); setError(err) });
+                .catch(err => {
+                    setSuccess(false);
+                    setError(err);
+                });
         },
         isLoggedOut: success,
         error,
@@ -87,7 +91,10 @@ export function Navbar({ user }: { user: User | null }) {
                         }}
                         className="px-4 py-2"
                     >
-                        <Button type="submit" className="bg-red-500 text-white text-nowrap">
+                        <Button
+                            type="submit"
+                            className="bg-red-500 text-white text-nowrap"
+                        >
                             Odhlásit se
                         </Button>
                     </form>

@@ -11,6 +11,7 @@ export type Todo = {
     title: string;
     description: string | null;
     completed: boolean;
+    deadline: string | null;
     created_at: string;
     updated_at: string;
 };

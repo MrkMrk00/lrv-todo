@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Validator;
 
 /**
  *
@@ -47,5 +48,15 @@ class Todo extends Model
         return [
             'deadline' => 'datetime',
         ];
+    }
+
+    public static function validate(array $data): array
+    {
+        return Validator::validate($data, [
+            'completed' => 'required|boolean',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'deadline' => 'nullable|date',
+        ]);
     }
 }
