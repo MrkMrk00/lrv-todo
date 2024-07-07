@@ -52,7 +52,7 @@ export default function Home(props: HomeProps) {
 
                 {!todos.length && (
                     <strong className="text-2xl mx-auto pt-4">
-                        Ještě nemáš žádný TODOčka :(
+                        Nic :/
                     </strong>
                 )}
 

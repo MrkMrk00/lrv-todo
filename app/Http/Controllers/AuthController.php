@@ -5,18 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Inertia\Response;
+use Inertia\Response as InertiaResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
-    public function showLogin(): Response
+    public function showLogin(): InertiaResponse
     {
         return Inertia::render('Login');
     }
 
-    public function showRegister(): Response
+    public function showRegister(): InertiaResponse
     {
         return Inertia::render('Register');
     }
@@ -41,9 +43,13 @@ class AuthController extends Controller
         return to_route('todos.index');
     }
 
-    public function logout(): RedirectResponse
+    public function logout(Request $request): Response
     {
         Auth::logout();
+
+        if ($request->isXmlHttpRequest()) {
+            return response();
+        }
 
         return to_route('login');
     }
