@@ -11,18 +11,40 @@ use Inertia\Response;
 
 class TodoController extends Controller
 {
-    private const TODOS_PER_PAGE = 20;
+    private const TODOS_PER_PAGE = 2;
+    private const DATETIME_FORMAT = 'Y-m-d\TH:i';
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $todosPager = $this->user()
-            ->todos()
-            ->cursorPaginate(self::TODOS_PER_PAGE);
+        $query = $this->user()->todos()
+            ->orderBy('completed')
+            ->orderBy('deadline')
+            ->orderBy('created_at');
+
+        if ($request->query('only_uncompleted') === 'on') {
+            $query->where('completed', '=', 1);
+        }
+
+        if ($from = $request->query('from')) {
+            $dateTimeFrom = \DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $from);
+
+            $query->where('deadline', '>=', $dateTimeFrom)
+                ->whereNotNull('deadline');
+        }
+
+        if ($to = $request->query('to')) {
+            $dateTimeTo = \DateTimeImmutable::createFromFormat(self::DATETIME_FORMAT, $to);
+
+            $query->where('deadline', '<=', $dateTimeTo)
+                ->whereNotNull('deadline');
+        }
+
+        $todosPager = $query->simplePaginate(self::TODOS_PER_PAGE);
 
         return Inertia::render('Home', [
             'todos' => $todosPager->items(),
-            'previous' => $todosPager->previousPageUrl(),
-            'next' => $todosPager->nextPageUrl(),
+            'page' => $todosPager->currentPage(),
+            'hasMorePages' => $todosPager->hasMorePages(),
         ]);
     }
 
@@ -35,7 +57,7 @@ class TodoController extends Controller
             ->todos()
             ->create($data);
 
-        return to_route('todos.index');
+        return back();
     }
 
     public function update(Request $request, Todo $todo): RedirectResponse
@@ -45,7 +67,7 @@ class TodoController extends Controller
         $data = Todo::validate($request->all());
         $todo->update($data);
 
-        return to_route('todos.index');
+        return back();
     }
 
     public function destroy(Todo $todo): RedirectResponse
@@ -54,6 +76,6 @@ class TodoController extends Controller
 
         $todo->delete();
 
-        return to_route('todos.index');
+        return back();
     }
 }

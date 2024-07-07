@@ -4,22 +4,19 @@ import { CollapseChevron } from '@/components/Icons';
 import { TodoFilter } from '@/components/TodoFilter';
 import { AddTodoRow, TodoRow } from '@/components/TodoList';
 import type { PageProps, Todo } from '@/types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Pager } from '@/components/Pager';
 
 type HomeProps = PageProps<{
     todos: Todo[];
+    page: number;
     hasMorePages: boolean;
 }>;
 
 export default function Home(props: HomeProps) {
-    const { todos } = props;
+    console.log(props);
+    const { todos, page, hasMorePages } = props;
     const [showAddTodo, setShowAddTodo] = useState(!todos?.length);
-
-    useEffect(() => {
-        if (!showAddTodo && !todos.length) {
-            setShowAddTodo(true);
-        }
-    }, [todos]);
 
     return (
         <AppLayout {...props}>
@@ -52,7 +49,7 @@ export default function Home(props: HomeProps) {
                     </>
                 )}
 
-                {!!todos.length && <TodoFilter />}
+                <TodoFilter />
 
                 {!todos.length && (
                     <strong className="text-2xl mx-auto pt-4">
@@ -63,6 +60,10 @@ export default function Home(props: HomeProps) {
                 {todos.map(todo => (
                     <TodoRow todo={todo} key={`todo-${todo.id}`} />
                 ))}
+
+                {!(page === 1 && !hasMorePages) && (
+                    <Pager hasMore={hasMorePages} page={page} />
+                )}
             </main>
         </AppLayout>
     );

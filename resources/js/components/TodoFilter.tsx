@@ -3,7 +3,7 @@ import { Input } from '@/components/Form';
 import { CollapseChevron } from '@/components/Icons';
 import { Toggle } from '@/components/Toggle';
 import { router } from '@inertiajs/react';
-import { type MouseEvent, type RefObject, useRef, useState } from 'react';
+import { type MouseEvent, type RefObject, useMemo, useRef, useState } from 'react';
 
 function Clear({
     inputRef,
@@ -57,6 +57,10 @@ export function TodoFilter() {
 
     const timeout = useRef<number | null>(null);
 
+    const defaultValue = useMemo(() => {
+        return new URLSearchParams(window.location.search);
+    }, []);
+
     function handleFilter() {
         if (timeout.current) {
             clearTimeout(timeout.current);
@@ -101,6 +105,7 @@ export function TodoFilter() {
                         <label className="inline-flex gap-4 items-center">
                             <small>Pouze nesplněné</small>
                             <Toggle
+                                defaultChecked={defaultValue.has('only_uncompleted')}
                                 onChange={handleFilter}
                                 name="only_uncompleted"
                             />
@@ -109,6 +114,7 @@ export function TodoFilter() {
                         <label className="inline-flex gap-4 items-center">
                             <small>Od</small>
                             <Input
+                                defaultValue={defaultValue.get('from') ?? ''}
                                 ref={fromRef}
                                 type="datetime-local"
                                 name="from"
@@ -119,6 +125,7 @@ export function TodoFilter() {
                         <label className="inline-flex gap-4 items-center">
                             <small>Do</small>
                             <Input
+                                defaultValue={defaultValue.get('to') ?? ''}
                                 ref={toRef}
                                 type="datetime-local"
                                 name="to"
